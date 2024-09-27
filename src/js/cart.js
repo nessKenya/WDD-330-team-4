@@ -1,9 +1,14 @@
-import { getLocalStorage } from "./utils.mjs";
+import { getLocalStorage } from './utils.mjs';
 
 function renderCartContents() {
-  const cartItems = getLocalStorage("so-cart");
-  const htmlItems = cartItems.map((item) => cartItemTemplate(item));
-  document.querySelector(".product-list").innerHTML = htmlItems.join("");
+  // make sure the cart is an array!!!!
+  const cartItems = getLocalStorage('so-cart') || [];
+
+  // quadruple check it's an array before calling .map (it won't work if it's not)
+  if (Array.isArray(cartItems)) {
+    const htmlItems = cartItems.map((item) => cartItemTemplate(item));
+    document.querySelector('.product-list').innerHTML = htmlItems.join('');
+  } 
 }
 
 function cartItemTemplate(item) {
