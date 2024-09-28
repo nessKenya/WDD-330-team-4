@@ -220,3 +220,8 @@ footer {
   font-size: var(--small-font);
   padding: 1em;
 }
+
+/* this style hides the total when the .hide class is added to an element */
+.hide {
+  display: none;
+}

@@ -25,4 +25,24 @@ function cartItemTemplate(item) {
   return newItem;
 }
 
+function findCartTotal() {
+  const cartItems = getLocalStorage('so-cart');
+  
+  // check if the cart is empty and add a hide class if it is
+  if (cartItems.length === 0){
+    document.querySelector('.cart-footer').classList.add('hide');
+    return;
+  }
+
+  // use reduce to add the items together
+  const total = cartItems.reduce((sum, item) => {
+    return sum + item.FinalPrice;
+  }, 0);
+
+  // show the total to 2 decimals and ensure the hide class is removed it makes it here
+  document.querySelector('.cart-total').textContent = `Total: $${total.toFixed(2)}`;
+  document.querySelector('.cart-footer').classList.remove('hide');
+}
+
 renderCartContents();
+findCartTotal();
