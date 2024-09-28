@@ -220,3 +220,21 @@ footer {
   font-size: var(--small-font);
   padding: 1em;
 }
+
+#product-count {
+  display: flex;
+  justify-content: center;
+  align-tracks: center;
+  background-color: tan;
+  position: absolute;
+  margin-right: -0.5rem;
+  margin-top: 0.25rem;
+  right: 0;
+  top: 0;
+  padding: 4px;
+  border-radius: 2rem;
+  height: 1.5rem;
+  width: 1.5rem;
+  font-size: 0.875rem;
+  font-weight: bold;
+}
