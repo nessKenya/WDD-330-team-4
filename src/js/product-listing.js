@@ -17,3 +17,9 @@ const targetElement = document.querySelector('.product-list');
 const productList = new ProductList(category, productData, targetElement);
 
 productList.init();
+
+const sortElement = document.getElementById('sortBox');
+
+sortElement.addEventListener('change', function () {
+  productList.sortBy(sortElement.value);
+});

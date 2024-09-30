@@ -23,6 +23,14 @@ export default class ProductList {
     this.renderList(productList);
   }
 
+  async sortBy(sortFilter) {
+    let sortAttribute = sortFilter === 'name' ? 'Name' : 'FinalPrice';
+
+    const productList = await this.dataSource.getData(this.category);
+    const sortedList = productList.sort((a, b) => a[sortAttribute] - b[sortAttribute]);
+    renderListWithTemplate(productCardTemplate, this.listElement, sortedList, 'afterBegin', true);
+  }
+
   renderList(productList) {
     renderListWithTemplate(productCardTemplate, this.listElement, productList);
   }
