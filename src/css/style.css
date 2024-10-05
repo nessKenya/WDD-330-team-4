@@ -241,3 +241,34 @@ footer {
   font-size: 0.875rem;
   font-weight: bold;
 }
+
+.category-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 1rem;
+  padding: 1rem;
+  margin: 4rem 0;
+}
+
+.category-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.category-icon {
+  height: 120px;
+  margin-bottom: 1rem;
+}
+
+.category-card > span {
+  font-weight: bolder;
+}
+
+.product-list-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}

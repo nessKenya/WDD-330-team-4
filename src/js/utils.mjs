@@ -1,3 +1,13 @@
+import { showCartCount } from './cartProductCount';
+
+function convertToText(res) {
+  if (res.ok) {
+    return res.text();
+  } else {
+    throw new Error('Bad Response');
+  }
+}
+
 // wrapper for querySelector...returns matching element
 export function qs(selector, parent = document) {
   return parent.querySelector(selector);
@@ -36,4 +46,41 @@ export function renderListWithTemplate(templateFn, parentElement, list, position
   const htmlStrings = list.map(templateFn);
     
   parentElement.insertAdjacentHTML(position, htmlStrings.join(''));
+}
+
+export async function renderWithTemplate(templateFn, parentElement, data, position = 'afterBegin', clear = false, callback) {
+  if(clear){
+    parentElement.innerHTML = '';
+  }
+
+  const htmlTemplate = await templateFn(data);
+
+  parentElement.insertAdjacentHTML(position, htmlTemplate.innerHTML);
+
+  if(callback) {
+    callback();
+  }
+}
+
+export async function loadTemplate(path) {
+  let html = await fetch(path).then(convertToText);
+  let template = document.createElement('template')
+  template.innerHTML = html;
+
+  return template;
+}
+
+export async function loadHeaderFooter() {
+  const headerPath = '/partials/header.html';
+  const footerPath =  '/partials/footer.html';
+  const headerTarget = document.getElementsByTagName('header')[0];
+  const footerTarget = document.getElementsByTagName('footer')[0];
+  renderWithTemplate(
+    loadTemplate, 
+    headerTarget, 
+    headerPath, 
+    'afterBegin', 
+    false, 
+    () => showCartCount());
+  renderWithTemplate(loadTemplate, footerTarget, footerPath);
 }

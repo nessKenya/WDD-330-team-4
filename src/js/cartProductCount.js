@@ -1,19 +1,22 @@
 import { getLocalStorage } from './utils.mjs';
 
-const cartElement = document.querySelector('.cart');
+export function showCartCount() {
 
-const cartItems = getLocalStorage('so-cart');
-let productCount = 0;
-
-if(cartItems){
-    productCount = cartItems.length;
-}
-
-if(productCount > 0) {
-  cartElement.insertAdjacentHTML('afterbegin', '<div id="product-count"></div>')
+  const cartItems = getLocalStorage('so-cart');
 
   const countElement = document.querySelector('#product-count');
-  
-  countElement.innerHTML = productCount;
-}
 
+  let productCount = 0;
+
+  if (cartItems) {
+    productCount = cartItems.length;
+  }
+
+  if (productCount > 0) {
+      countElement.style.display = 'block'; 
+      countElement.innerHTML = productCount;
+  }
+  else{
+    countElement.style.display = 'none'; 
+  }
+  }
