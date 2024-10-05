@@ -1,3 +1,4 @@
+import { showCartCount } from './cartProductCount';
 import { setLocalStorage, getLocalStorage } from './utils.mjs';
 
 function productDetailsTemplate(product) {
@@ -43,6 +44,7 @@ export default class ProductDetails {
     if(products) {
       let newProductList = products.concat(this.product);
       setLocalStorage('so-cart', newProductList);
+      showCartCount();
     } else {
       /**
        * so-cart was empty
@@ -50,6 +52,7 @@ export default class ProductDetails {
        * should be an array
        * */ 
       setLocalStorage('so-cart', Array(this.product));
+      showCartCount();
     }
   }
 
