@@ -7,7 +7,7 @@ function cartItemTemplate(item) {
   const newItem = `<li class="cart-card divider">
   <a href="#" class="cart-card__image">
     <img
-      src="${item.Image}"
+      src="${item.Images.PrimarySmall}"
       alt="${item.Name}"
     />
   </a>
@@ -65,9 +65,7 @@ export default class ShoppingCart {
     }
   
     // use reduce to add the items together
-    const total = cartItems.reduce((sum, item) => {
-      return sum + item.FinalPrice;
-    }, 0);
+    const total = cartItems.reduce((sum, item) => sum + item.FinalPrice, 0);
   
     // show the total to 2 decimals and ensure the hide class is removed it makes it here
     document.querySelector('.cart-total').textContent = `Total: $${total.toFixed(2)}`;
