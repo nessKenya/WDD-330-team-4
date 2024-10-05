@@ -1,5 +1,6 @@
 import ExternalServices from './ExternalServices.mjs';
-import { getLocalStorage, renderWithTemplate } from './utils.mjs';
+import { getLocalStorage, renderWithTemplate, setLocalStorage, alertMessage } from './utils.mjs';
+
 
 function orderSummaryTemplate(data) {
   let template = document.createElement('template')
@@ -89,10 +90,17 @@ export default class CheckoutProcess {
     // build the data object from the calculated fields, the items in the cart, and the information entered into the form
     const items = packageItems(getLocalStorage(this.key));
 
-    const formData = {...formDataToJSON(document.getElementById('checkout')), items};
-    
-    // call the checkout method in our ExternalServices module and send it our data object.
-    const externalService = new ExternalServices();
-    await externalService.checkout(formData);
+    const formData = {...formDataToJSON(document.getElementById('checkout')), items, orderDate: new Date()};
+
+    try{
+      // call the checkout method in our ExternalServices module and send it our data object.
+      const externalService = new ExternalServices();
+      await externalService.checkout(formData);
+      setLocalStorage('so-cart', []);
+      document.location.href = '/checkout/success.html';
+    }catch(error){
+     alertMessage(error.message.message);
+    }
+   
   }
 }

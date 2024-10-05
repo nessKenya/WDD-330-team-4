@@ -331,3 +331,25 @@ input {
 .bold {
   font-weight: bold;
 }
+
+.alert {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #f0a86877;
+  border: 2px solid #f0a868;
+  padding: 1.5rem;
+  margin: 1rem;
+  width: 50%;
+}
+
+#closeAlert{
+  cursor: pointer;
+}
+
+.zoom{
+  transform:scale(2);
+  transition: transform 1s ease-in-out;
+}
+
+
