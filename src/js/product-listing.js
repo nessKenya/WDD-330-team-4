@@ -1,5 +1,5 @@
 import ProductList from './ProductList.mjs';
-import ProductData from './ProductData.mjs';
+import ExternalServices from './ExternalServices.mjs';
 import { getParam, loadHeaderFooter } from './utils.mjs';
 
 loadHeaderFooter();
@@ -10,7 +10,7 @@ const headingElement = document.querySelector('#heading');
 headingElement.innerHTML = `top products: ${category}`;
 headingElement.style.textTransform = 'capitalize';
 
-const productData = new ProductData(category);
+const productData = new ExternalServices(category);
 
 const targetElement = document.querySelector('.product-list');
 
