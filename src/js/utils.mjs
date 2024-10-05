@@ -84,3 +84,24 @@ export async function loadHeaderFooter() {
     () => showCartCount());
   renderWithTemplate(loadTemplate, footerTarget, footerPath);
 }
+
+export function alertMessage(message, scroll = true) {
+
+  function alertTemplate(data) {
+    let template = document.createElement('template');
+
+    let html =  `<div class='alert'>
+      <span id='alertMessage'>${data}</span>
+      <span id='closeAlert' onclick='return this.parentNode.remove();'>❌</span>
+    </div>`
+
+    template.innerHTML = html;
+    return template;
+  }
+
+  const targetElement = document.querySelector('main');
+  
+  renderWithTemplate(alertTemplate, targetElement, message);
+
+  if(scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
+}
