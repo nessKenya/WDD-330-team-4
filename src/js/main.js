@@ -1,8 +1,8 @@
-import ProductData from './ProductData.mjs';
 import ProductList from './ProductList.mjs';
+import ProductData from './ProductData.mjs';
 
-const dataSource = new ProductData('tents');
-const element = document.querySelector('.product-list');
-const listing = new ProductList('Tents', dataSource, element);
+import { loadHeaderFooter } from './utils.mjs';
+loadHeaderFooter('/partials/header.html', '/partials/footer.html');
+const productData = new ProductData('tents');
 
-listing.init();
+const targetElement = document.querySelector('.product-list');
