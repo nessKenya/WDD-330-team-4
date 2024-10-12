@@ -37,20 +37,26 @@ export default class ProductDetails {
   }
 
   addProductToCart() {
-    // get cuurent products in cart
     let products = getLocalStorage('so-cart');
   
-    // confirm if cart is empty
-    if(products) {
-      let newProductList = products.concat(this.product);
-      setLocalStorage('so-cart', newProductList);
-      showCartCount();
+    if (products) {
+      const existingProductIndex = products.findIndex(p => p.id === this.product.id);
+      
+      if (existingProductIndex !== -1) {
+        products[existingProductIndex].quantity += 1;
+      } else {
+        this.product.quantity = 1;
+        products.push(this.product);
+      }
+      
+      setLocalStorage('so-cart', products);
     } else {
       /**
        * so-cart was empty
        * initialize with new/first product added
        * should be an array
        * */ 
+      this.product.quantity = 1;
       setLocalStorage('so-cart', Array(this.product));
       showCartCount();
 
