@@ -1,5 +1,5 @@
 import { showCartCount } from './cartProductCount';
-import { setLocalStorage, getLocalStorage } from './utils.mjs';
+import { setLocalStorage, getLocalStorage, alertMessage } from './utils.mjs';
 
 function productDetailsTemplate(product) {
   return `<section class="product-detail"> <h3>${product.Brand.Name}</h3>
@@ -51,11 +51,22 @@ export default class ProductDetails {
       
       setLocalStorage('so-cart', products);
     } else {
+      /**
+       * so-cart was empty
+       * initialize with new/first product added
+       * should be an array
+       * */ 
       this.product.quantity = 1;
-      setLocalStorage('so-cart', [this.product]);
+      setLocalStorage('so-cart', Array(this.product));
+      showCartCount();
+
     }
-    
-    showCartCount();
+    const icon = document.getElementById('backpack-icon');
+    icon.classList.add('zoom');
+
+    setTimeout(()=>icon.classList.remove('zoom'), 1500)
+
+    alertMessage('Product Added To Cart', true);
   }
 
   renderProductDetails(selector) {
