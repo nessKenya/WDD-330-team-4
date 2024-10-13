@@ -1,86 +1,75 @@
 <!doctype html>
-
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Sleep Outside | Checkout</title>
-
-    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="../js/checkout.js" type="module"></script>
   </head>
-
   <body>
-    <header class="divider">
-        <!-- header content -->
-    </header>
-
-    <main class="divider">
-      <section class="products">
-        <h2>Review & Place your Order</h2>
-        <form action="" id="checkout">
-          <h3>Your Name</h3>
-
-          <div class="col-2">
-            <p class="form-item">
-              <label for="first-name">First Name</label>
-              <input name='fname' id="first-name" type="text" required>
-             </p> 
-             <p class="form-item">
-              <label for="last-name">Last Name</label>
-              <input name='lname' id="last-name" type="text" required>
-             </p> 
-          </div>
-
-          <h3>Billing Address</h3>
-          <div>
-           <p class="form-item">
-            <label for="street-address">Street Address</label>
-            <textarea name='street' id="street-address" required rows="7"></textarea>
-           </p> 
-           <div class="col-2">
-            <p class="form-item">
+    <header class="divider" id="main-header"></header>
+    <main class="divider checkout">
+      <h2>Review & Place your Order</h2>
+      <section class="checkout-form">
+        <form name="checkout">
+          <fieldset>
+            <legend>Shipping</legend>
+            <div class="checkout__name">
+              <label for="fname">First Name</label>
+              <input name="fname" required />
+              <label for="lname">Last Name</label>
+              <input name="lname" required />
+            </div>
+            <div class="checkout__address">
+              <label for="street">Street</label>
+              <input name="street" required />
               <label for="city">City</label>
-              <input name='city' id="city" type="text" required>
-             </p> 
-             <p class="form-item">
+              <input name="city" required />
               <label for="state">State</label>
-              <input name="state" id="state" type="text" required>
-             </p> 
-           </div>
-          
-           <p class="form-item">
-            <label for="zip-code">Zip Code</label>
-            <input name="zip" id="zip-code" type="text" required>
-           </p> 
-          </div>
+              <input name="state" required />
+              <label for="zip">Zip</label>
+              <input name="zip" id="zip" required />
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Payment</legend>
+            <label for="cardNumber">Card number</label>
+            <input name="cardNumber" required />
+            <label for="expiration">Expiration</label>
+            <input name="expiration" required />
+            <label for="code">Security Code</label>
+            <input name="code" required />
+          </fieldset>
+          <fieldset class="checkout-summary">
+            <legend>Order Summary</legend>
+            <ul>
+              <li>
+                <label for="cartTotal"
+                  >Item Subtotal(<span id="num-items"></span>)</label
+                >
+                <p name="cartTotal" id="cartTotal"></p>
+              </li>
+              <li>
+                <label for="shipping">Shipping Estimate</label>
+                <p id="shipping"></p>
+              </li>
+              <li>
+                <label for="tax">Tax</label>
+                <p id="tax"></p>
+              </li>
+              <li>
+                <label for="orderTotal"><b>Order Total</b></label>
+                <p id="orderTotal"></p>
+              </li>
+            </ul>
+          </fieldset>
 
-          <h3>Payment Details</h3>
-           <p class="form-item">
-            <label for="zip-code">Credit Card Number</label>
-            <input name="cardNumber" id="card-number" type="text" value="1234123412341234" required>
-           </p> 
-           <p class="form-item">
-            <label for="zip-code">Expiration Date</label>
-            <input name="expiration" id="expiration-date" type="text" value="11/24" required>
-           </p> 
-           <p class="form-item">
-            <label for="security-code">Security Code</label>
-            <input name="code" id="security-code" type="text" value="123" required>
-           </p>
-          
-           <div id="order-summary">
-              
-           </div>
-           <button type="submit">Checkout</button>
+          <button id="checkoutSubmit" type="submit">Checkout</button>
+          <div id="checkout-message"></div>
         </form>
       </section>
     </main>
-
-    <footer>
-      <!-- footer content -->
-    </footer>
-    <script src="../js/checkout.js" type="module"></script>
+    <footer id="main-footer"></footer>
   </body>
 </html>
