@@ -1,26 +1,12 @@
+import {
+  setLocalStorage,
+  getLocalStorage,
+  alertMessage,
+  removeAllAlerts,
+} from './utils.mjs';
 import ExternalServices from './ExternalServices.mjs';
-import { getLocalStorage, renderWithTemplate, setLocalStorage, alertMessage } from './utils.mjs';
 
-
-function orderSummaryTemplate(data) {
-  let template = document.createElement('template')
-  let html = `<p>Subtotal: <span id="itemTotal">$${data.itemTotal.toFixed(2)}</span></p>
-    <p>Shipping Estimate: <span id="shipping">$${data.shipping.toFixed(2)}</span></p>
-    <p>Tax: <span id="tax"></span>$${data.tax.toFixed(2)}</p>
-    <p class='bold'>Order Total: <span id="orderTotal">$${data.orderTotal.toFixed(2)}</span></p>`
-
-  template.innerHTML = html;
-
-  return template;
-}
-
-// takes the items currently stored in the cart (localstorage) and returns them in a simplified form.
-function packageItems(items) {
-  // convert the list of products from localStorage to the simpler form required for the checkout process. Array.map would be perfect for this.
-  return items.map(item => ({id: item.Id, name: item.NameWithoutBrand, price: item.FinalPrice, quantity: 1}));
-}
-
-// takes a form element and returns an object where the key is the "name" of the form input.
+const services = new ExternalServices();
 function formDataToJSON(formElement) {
   const formData = new FormData(formElement),
     convertedJSON = {};
@@ -32,8 +18,21 @@ function formDataToJSON(formElement) {
   return convertedJSON;
 }
 
+function packageItems(items) {
+  const simplifiedItems = items.map((item) => {
+    console.log(item);
+    return {
+      id: item.Id,
+      price: item.FinalPrice,
+      name: item.Name,
+      quantity: 1,
+    };
+  });
+  return simplifiedItems;
+}
+
 export default class CheckoutProcess {
-  constructor(key, outputSelector){
+  constructor(key, outputSelector) {
     this.key = key;
     this.outputSelector = outputSelector;
     this.list = [];
@@ -42,65 +41,67 @@ export default class CheckoutProcess {
     this.tax = 0;
     this.orderTotal = 0;
   }
-
   init() {
     this.list = getLocalStorage(this.key);
     this.calculateItemSummary();
   }
-
   calculateItemSummary() {
-    // calculate and display the total amount of the items in the cart, and the number of items.
-    this.itemTotal = this.list.reduce((total, item) => total + item.FinalPrice, 0)
+    const summaryElement = document.querySelector(
+      this.outputSelector + ' #cartTotal',
+    );
+    const itemNumElement = document.querySelector(
+      this.outputSelector + ' #num-items',
+    );
+    itemNumElement.innerText = this.list.length;
+    // calculate the total of all the items in the cart
+    const amounts = this.list.map((item) => item.FinalPrice);
+    this.itemTotal = amounts.reduce((sum, item) => sum + item);
+    summaryElement.innerText = '$' + this.itemTotal;
   }
-
   calculateOrdertotal() {
-    // calculate the shipping and tax amounts. Then use them to along with the cart total to figure out the order total
-    
-    // compute tax
-    this.tax = this.itemTotal * 0.06;
-
-    // compute shipping
-    for(let i = 0;i < this.list.length;i++) {
-      if(i === 0){
-        this.shipping += 10;
-        continue;
-      }
-      this.shipping += 2;
-    }
-
-    // compute order total
-    this.orderTotal = this.itemTotal + this.tax  + this.shipping;
-
-    // display the totals.
+    this.shipping = 10 + (this.list.length - 1) * 2;
+    this.tax = (this.itemTotal * 0.06).toFixed(2);
+    this.orderTotal = (
+      parseFloat(this.itemTotal) +
+      parseFloat(this.shipping) +
+      parseFloat(this.tax)
+    ).toFixed(2);
     this.displayOrderTotals();
   }
-
   displayOrderTotals() {
-    // once the totals are all calculated display them in the order summary page
-    renderWithTemplate(
-      orderSummaryTemplate,
-      document.querySelector(this.outputSelector),
-      {itemTotal: this.itemTotal, shipping: this.shipping, tax: this.tax, orderTotal: this.orderTotal},
-      'afterBegin',
-      true,
+    const shipping = document.querySelector(this.outputSelector + ' #shipping');
+    const tax = document.querySelector(this.outputSelector + ' #tax');
+    const orderTotal = document.querySelector(
+      this.outputSelector + ' #orderTotal',
     );
+    shipping.innerText = '$' + this.shipping;
+    tax.innerText = '$' + this.tax;
+    orderTotal.innerText = '$' + this.orderTotal;
   }
+  async checkout() {
+    const formElement = document.forms['checkout'];
 
-  async checkout() {    
-    // build the data object from the calculated fields, the items in the cart, and the information entered into the form
-    const items = packageItems(getLocalStorage(this.key));
-
-    const formData = {...formDataToJSON(document.getElementById('checkout')), items, orderDate: new Date()};
-
-    try{
-      // call the checkout method in our ExternalServices module and send it our data object.
-      const externalService = new ExternalServices();
-      await externalService.checkout(formData);
+    const json = formDataToJSON(formElement);
+    // add totals, and item details
+    json.orderDate = new Date();
+    json.orderTotal = this.orderTotal;
+    json.tax = this.tax;
+    json.shipping = this.shipping;
+    json.items = packageItems(this.list);
+    console.log(json);
+    try {
+      const res = await services.checkout(json);
+      console.log(res);
       setLocalStorage('so-cart', []);
-      document.location.href = '/checkout/success.html';
-    }catch(error){
-     alertMessage(error.message.message);
+      location.assign('/checkout/success.html');
+    } catch (err) {
+      // get rid of any preexisting alerts.
+      removeAllAlerts();
+      for (let message in err.message) {
+        alertMessage(err.message[message]);
+      }
+
+      console.log(err);
     }
-   
   }
 }

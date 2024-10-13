@@ -1,7 +1,6 @@
 import { getLocalStorage } from './utils.mjs';
 
 export function showCartCount() {
-
   const cartItems = getLocalStorage('so-cart');
 
   const countElement = document.querySelector('#product-count');
@@ -13,10 +12,9 @@ export function showCartCount() {
   }
 
   if (productCount > 0) {
-      countElement.style.display = 'block'; 
-      countElement.innerHTML = productCount;
+    countElement.style.display = 'block';
+    countElement.innerHTML = productCount;
+  } else {
+    countElement.style.display = 'none';
   }
-  else{
-    countElement.style.display = 'none'; 
-  }
-  }
+}

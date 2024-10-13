@@ -1,5 +1,4 @@
-import { getParam } from './utils.mjs';
-import { loadHeaderFooter } from './utils.mjs';
+import { getParam, loadHeaderFooter } from './utils.mjs';
 import ExternalServices from './ExternalServices.mjs';
 import ProductDetails from './productDetails.mjs';
 
