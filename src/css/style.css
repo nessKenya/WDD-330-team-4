@@ -416,3 +416,12 @@ input {
   transform:scale(2);
   transition: transform 1s ease-in-out;
 }
+
+#addToCart:hover {
+  cursor: pointer;
+}
+
+.cart-card__remove {
+  grid-column: 4;
+  cursor: pointer;
+}
