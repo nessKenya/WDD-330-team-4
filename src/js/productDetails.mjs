@@ -1,3 +1,4 @@
+import { showCartCount } from './cartProductCount';
 import { setLocalStorage, getLocalStorage, alertMessage } from './utils.mjs';
 
 function productDetailsTemplate(product) {
@@ -18,39 +19,56 @@ function productDetailsTemplate(product) {
     </div></section>`;
 }
 
+
 export default class ProductDetails {
   constructor(productId, dataSource) {
     this.productId = productId;
     this.product = {};
     this.dataSource = dataSource;
   }
+
   async init() {
-    // use our datasource to get the details for the current product. findProductById will return a promise! use await or .then() to process it
     this.product = await this.dataSource.findProductById(this.productId);
-    // once we have the product details we can render out the HTML
+
     this.renderProductDetails('main');
-    // once the HTML is rendered we can add a listener to Add to Cart button
-    // Notice the .bind(this). Our callback will not work if we don't include that line. Review the readings from this week on 'this' to understand why.
-    document
-      .getElementById('addToCart')
-      .addEventListener('click', this.addToCart.bind(this));
+
+    document.getElementById('addToCart')
+      .addEventListener('click', this.addProductToCart.bind(this));
   }
-  addToCart() {
-    let cartContents = getLocalStorage('so-cart');
-    //check to see if there was anything there
-    if (!cartContents) {
-      cartContents = [];
+
+  addProductToCart() {
+    // get cuurent products in cart
+    let products = getLocalStorage('so-cart');
+  
+    // confirm if cart is empty
+    if(products) {
+      let newProductList = products.concat(this.product);
+      setLocalStorage('so-cart', newProductList);
+      showCartCount();
+    } else {
+      /**
+       * so-cart was empty
+       * initialize with new/first product added
+       * should be an array
+       * */ 
+      setLocalStorage('so-cart', Array(this.product));
+      showCartCount();
+
     }
-    // then add the current product to the list
-    cartContents.push(this.product);
-    setLocalStorage('so-cart', cartContents);
-    alertMessage(`${this.product.NameWithoutBrand} added to cart!`);
+    const icon = document.getElementById('backpack-icon');
+    icon.classList.add('zoom');
+
+    setTimeout(()=>icon.classList.remove('zoom'), 1500)
+
+    alertMessage('Product Added To Cart', true);
   }
+
   renderProductDetails(selector) {
     const element = document.querySelector(selector);
+
     element.insertAdjacentHTML(
       'afterBegin',
-      productDetailsTemplate(this.product),
+      productDetailsTemplate(this.product)
     );
   }
 }
